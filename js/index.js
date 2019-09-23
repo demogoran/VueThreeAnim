@@ -26,22 +26,22 @@ export default class Main {
     this.root.add(animationMesh);
     this.meshes[name] = animationMesh;
 
+    //Sample of Gsock animation(instead of per-frame calculations)
 
-    const tl = new TimelineMax({
+    /* const tl = new TimelineMax({
       repeat: 0,
     });
 
-    //Sample of Gsock animation(instead of per-frame calculations)
-    /* tl.to(animationMesh, duration * .75, {
+    tl.to(animationMesh, duration * .75, {
       time: animationMesh.totalDuration,
       repeat: 0, yoyo: true,
       ease: Power0.easeIn,
       onComplete() {
 
       }
-    }); */
+    });
 
-    this.tl = tl;
+    this.tl = tl; */
 
     return animationMesh;
   }

@@ -13,7 +13,7 @@
       <audio id="playTrack" autoplay controls :src="trackSrc" ref="audio" />
 
       <div class="button" @click="applyChanges()">Change</div>
-      <div class="button" @click="setTextTexture('Test')">Text test</div>
+      <div class="button" @click="setCurrentText('Test')">Text test</div>
       <div class="button" @click="startPlay()">Start Play</div>
     </div>
   </div>
@@ -89,7 +89,7 @@ export default {
       this.mainMesh.resetMaterial({
         vertexPosition: [this.vertexPosition]
       });
-      this.main.restartAnimation();
+      // this.main.restartAnimation(); //used to restart GSock animation
     },
 
     onTrackPlaying() {
@@ -110,7 +110,7 @@ export default {
 
       const srtCurrIndex = currentElem.id;
       if (this.srtPrevIndex !== srtCurrIndex) {
-        this.setTextTexture(
+        this.setCurrentText(
           currentElem.text,
           currentElem.end - currentElem.start
         );
@@ -130,7 +130,7 @@ export default {
       this.trackSrc = "legends.mp3";
     },
 
-    setTextTexture(text, duration) {
+    setCurrentText(text, duration) {
       this.main.removeAllMeshes();
 
       this.mainMesh = this.main.addAnimationMesh(
@@ -147,12 +147,6 @@ export default {
         }),
         duration
       );
-
-      const camera = this.main.root.camera;
-
-      camera.lookAt(this.mainMesh.position);
-      this.mainMesh.position.x -= this.mainMesh.sizes.width / 4;
-      camera.position.z = 150;
 
       const trajectoryList = [
         `
@@ -187,7 +181,13 @@ export default {
           vertexPosition: randomTrajectory
         });
       }
-      this.main.restartAnimation();
+
+      const camera = this.main.root.camera;
+
+      camera.lookAt(this.mainMesh.position);
+      this.mainMesh.position.x -= this.mainMesh.sizes.width / 4;
+      camera.position.z = 150;
+      // this.main.restartAnimation(); //Could be used in case you could like to use GSock
     }
   },
 

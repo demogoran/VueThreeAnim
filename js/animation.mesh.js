@@ -132,8 +132,8 @@ export default class AnimationMesh extends THREE.Mesh {
     // BAS also extends THREE.MeshPhongMaterial and THREE.MeshBasicMaterial in the same way
 
 
-    const texture = new THREE.Texture();
-    texture.minFilter = THREE.NearestFilter;
+    // const texture = new THREE.Texture();
+    // texture.minFilter = THREE.NearestFilter;
     const materialOptions = {
       vertexColors: THREE.VertexColors,
       // material parameters/flags go here
@@ -144,14 +144,12 @@ export default class AnimationMesh extends THREE.Mesh {
         // uTime is updated every frame, and is used to calculate the current animation state
         // this is the only value that changes, which is the reason we can animate so many objects at the same time
         uTime: { value: 0 },
-        needSplash: 1,
         textureImage: null,
       },
       // uniform *values* of the material we are extending go here
       uniformValues: {
-        map: texture,
-        needSplash: 1,
-        textureImage: new THREE.TextureLoader().load('logo.svg'),
+        // map: texture,
+        // textureImage: new THREE.TextureLoader().load('logo.svg'),
         canvasResolution: {
           x: window.innerWidth,
           y: window.innerHeight,

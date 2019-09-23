@@ -1,22 +1,24 @@
 window.onload = init;
 
 var recorder;
-var timeline=new TimelineMax({ repeat: 0, repeatDelay: 0.0, yoyo: false, onUpdate:()=>{
-  //console.log('Updating');
-},
-onComplete: ()=>{
-  console.log("Done");
-  recorder.stop();
-}});
+var timeline = new TimelineMax({
+  repeat: 0, repeatDelay: 0.0, yoyo: false, onUpdate: () => {
+    //console.log('Updating');
+  },
+  onComplete: () => {
+    console.log("Done");
+    recorder.stop();
+  }
+});
 
 
-function startCapturing(){
+function startCapturing() {
   var stream = document.querySelector('#three-container canvas').captureStream(30);
   recorder = new MediaRecorder(stream, {
     mimeType: 'video/webm'
   });
-  recorder.addEventListener('dataavailable', function(e){
-    var videoData = [ e.data ];
+  recorder.addEventListener('dataavailable', function (e) {
+    var videoData = [e.data];
     var blob = new Blob(videoData, { 'type': 'video/webm' });
     var url = URL.createObjectURL(blob);
 
@@ -24,7 +26,7 @@ function startCapturing(){
     document.body.appendChild(a);
     a.style = "display: none";
     a.href = url;
-    a.download = Date.now()+'.webm';
+    a.download = Date.now() + '.webm';
     a.click();
     window.URL.revokeObjectURL(url);
     /*var reader = new FileReader;
@@ -58,8 +60,8 @@ function init() {
   startCapturing();
 
 
-  var totalTime=10;
-  var duration=2;
+  var totalTime = 10;
+  var duration = 2;
   var loader = new THREE.FontLoader();
   loader.load('fonts/georgia.js', (font) => {
     var geometry = new THREE.TextGeometry("Ravado Studio", {
@@ -87,16 +89,16 @@ function init() {
   });
 
 
-  var cSize=30;
-  var sizes=[480,720];
-  var animation = new ObjAnim(new THREE.PlaneGeometry(cSize, cSize*sizes[1]/sizes[0], 100, 100), "in", new THREE.Color("white"));
+  var cSize = 30;
+  var sizes = [480, 720];
+  var animation = new ObjAnim(new THREE.PlaneGeometry(cSize, cSize * sizes[1] / sizes[0], 100, 100), "in", new THREE.Color("white"));
   console.log(animation);
   //var animation = new ObjAnim(new THREE.CubeGeometry(cSize, cSize*1.921708185053381, cSize, 50, 50), "in", new THREE.Color("white"));
   //animation.position.x = -27;
   //animation.position.y = 130;
 
   window.pivot = new THREE.Object3D();
-  pivot.position.y=0;
+  pivot.position.y = 0;
   pivot.add(animation);
 
   //obj.rotateY(180/180*Math.PI);
@@ -194,12 +196,7 @@ function Slide(plane, animationPhase, uBackColor) {
   var aStartPosition = geometry.createAttribute('aStartPosition', 3, function (data, i) {
     geometry.centroids[i].toArray(data);
   });
-  /*var maxCoords={
-    x: Math.max(...aStartPosition.array.filter((x,i)=>i%3===0)),
-    y: Math.max(...aStartPosition.array.filter((x,i)=>i%3===1)),
-    z: Math.max(...aStartPosition.array.filter((x,i)=>i%3===2)),
-  }
-  console.log(maxCoords);*/
+
   var aEndPosition = geometry.createAttribute('aEndPosition', 3, function (data, i) {
     geometry.centroids[i].toArray(data);
   });
@@ -247,14 +244,14 @@ function Slide(plane, animationPhase, uBackColor) {
   var texture = new THREE.Texture();
   texture.minFilter = THREE.NearestFilter;
 
-  var _canvas=document.querySelector('#three-container canvas');
+  var _canvas = document.querySelector('#three-container canvas');
   var material = new THREE.BAS.BasicAnimationMaterial({
     shading: THREE.FlatShading,
     side: THREE.DoubleSide,
     uniforms: {
       canvasResolution: {},
       uTime: { value: 0 },
-      uBackColor: { value: uBackColor||new THREE.Color().setHSL(0, 1.0, 0.5) }
+      uBackColor: { value: uBackColor || new THREE.Color().setHSL(0, 1.0, 0.5) }
     },
     uniformValues: {
       map: new THREE.TextureLoader().load('models/ravversus.jpg'),
@@ -262,7 +259,6 @@ function Slide(plane, animationPhase, uBackColor) {
         x: _canvas.clientWidth,
         y: _canvas.clientHeight,
       },
-      //diffuse: new THREE.Color(0xFF00FF11)
     },
     vertexFunctions: [
       THREE.BAS.ShaderChunk['cubic_bezier'],
@@ -290,10 +286,6 @@ function Slide(plane, animationPhase, uBackColor) {
       (animationPhase === 'in' ? 'transformed *= tProgress;' : 'transformed *= 1.0 - tProgress;'),
       // translation based on the bezier curve defined by the attributes
       `transformed+=vec3(aStartPosition.x, aStartPosition.y, aStartPosition.z);`
-      /*`transformed += cubicBezier(aStartPosition,
-      vec3(aControl0.x, aControl0.y, aControl0.z*2.0),
-      vec3(aControl1.x, aControl1.y, aControl1.z*2.0),
-      aEndPosition, tProgress);`*/
     ],
     fragmentParameters: [
       'uniform float uTime;',
@@ -302,15 +294,8 @@ function Slide(plane, animationPhase, uBackColor) {
       'vec3 aStartPos;'
     ],
     fragmentMap: [
-      //'gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);',
-      //'diffuseColor = vec4(vUv[0], vUv[1], vUv[0], 1.0);',
-      //'diffuseColor = texture2D(map, vUv);',
-      //'diffuseColor[1]*=sin(uTime);'
-      //'diffuseColor = vec4(1.0, 0.9, 1.0, 1.0);'
-      //'diffuseColor = vec4(uBackColor, 1.0);'
       `
         vec2 uv = gl_FragCoord.xy / canvasResolution.xy;
-        //diffuseColor = texture2D(map, uv);
         diffuseColor = vec4(1.0, 1.0, 1.0, 1.0);
       `
     ]
@@ -347,7 +332,7 @@ Slide.prototype.setImage = function (image) {
 
 Slide.prototype.transition = function (totalTime, duration) {
   //return TweenMax.fromTo(this, duration, { time: 0.0 }, { time: duration, ease: Power0.easeInOut });
-  return TweenMax.fromTo(this, totalTime||5.0, { time: 0.0 }, { time: duration||this.totalDuration, ease: Power0.easeInOut });
+  return TweenMax.fromTo(this, totalTime || 5.0, { time: 0.0 }, { time: duration || this.totalDuration, ease: Power0.easeInOut });
 };
 
 
@@ -397,7 +382,7 @@ function ObjAnim(plane, animationPhase, uBackColor) {
 
   this.totalDuration = maxDuration + maxDelayX + maxDelayY + stretch;
 
-  var dataOffset=0;
+  var dataOffset = 0;
   for (i = 0, offset = 0; i < geometry.faceCount; i++) {
     /*vecData.array[dataOffset]=
     vecData.array[dataOffset+1]=
@@ -478,7 +463,7 @@ function ObjAnim(plane, animationPhase, uBackColor) {
     geometry.setFaceData(aControl0, i, control0.toArray(data));
     geometry.setFaceData(aControl1, i, control1.toArray(data));
   }
-  upGeometry=geometry;
+  upGeometry = geometry;
 
   var texture = new THREE.Texture();
   texture.minFilter = THREE.NearestFilter;
@@ -489,14 +474,12 @@ function ObjAnim(plane, animationPhase, uBackColor) {
     transparent: true,
     uniforms: {
       midPoint: {},
-      needSplash: 0,
       uTime: { value: 0 },
       textureImage: null,
-      uBackColor: { value: uBackColor||new THREE.Color().setHSL(0, 1.0, 0.5) }
+      uBackColor: { value: uBackColor || new THREE.Color().setHSL(0, 1.0, 0.5) }
     },
     uniformValues: {
       map: texture,
-      needSplash: 0,
       textureImage: new THREE.TextureLoader().load('models/ravversus.jpg'),
       //diffuse: new THREE.Color(0xFF00FF11)
     },
@@ -574,7 +557,7 @@ function ObjAnim(plane, animationPhase, uBackColor) {
   middle.y = (geometry.boundingBox.max.y + geometry.boundingBox.min.y) / 2;
   middle.z = (geometry.boundingBox.max.z + geometry.boundingBox.min.z) / 2;
   console.log(material.uniforms);
-  material.uniforms['midPoint'].value=middle;
+  material.uniforms['midPoint'].value = middle;
   THREE.Mesh.call(this, geometry, material);
 
   this.frustumCulled = false;
@@ -606,6 +589,6 @@ ObjAnim.prototype.setImage = function (image) {
 
 ObjAnim.prototype.transition = function (totalTime, duration) {
   return [
-    TweenMax.fromTo(this, totalTime||5.0, { time: 0.0 }, { time: duration||this.totalDuration, ease: Power0.easeInOut }),
-    TweenMax.fromTo(this.rotation, totalTime||5.0, { y: 0.0 }, { y: 90/180*Math.PI })];
+    TweenMax.fromTo(this, totalTime || 5.0, { time: 0.0 }, { time: duration || this.totalDuration, ease: Power0.easeInOut }),
+    TweenMax.fromTo(this.rotation, totalTime || 5.0, { y: 0.0 }, { y: 90 / 180 * Math.PI })];
 };
