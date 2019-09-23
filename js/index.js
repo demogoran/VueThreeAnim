@@ -13,8 +13,6 @@ export default class Main {
     root.renderer.setClearColor('black');
     root.camera.position.set(0, 0, 30);
 
-    /* var light = new THREE.DirectionalLight();
-    light.position.set(0, 0, 3); */
     const light = new THREE.AmbientLight(0xffffff, 4);
     root.scene.add(light);
 
@@ -24,7 +22,6 @@ export default class Main {
   }
 
   addAnimationMesh(name = Date.now(), prefabGeometry, duration = 7.0) {
-    // Animation extends THREE.Mesh
     const animationMesh = new AnimationMesh(this.shaderOptions, prefabGeometry);
     this.root.add(animationMesh);
     this.meshes[name] = animationMesh;
@@ -34,6 +31,7 @@ export default class Main {
       repeat: 0,
     });
 
+    //Sample of Gsock animation(instead of per-frame calculations)
     /* tl.to(animationMesh, duration * .75, {
       time: animationMesh.totalDuration,
       repeat: 0, yoyo: true,

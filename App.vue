@@ -64,16 +64,6 @@ import THREE from "./libs/three.extensions";
 import Main from "./js/index.js";
 import { AnimationOptions } from "./js/animation.options";
 
-/* const cSize = 30;
-const widthProportion = 8.571428571428571;
-
-main.addAnimationMesh(
-  "logo",
-  new THREE.PlaneGeometry(cSize * widthProportion, cSize, 300, 300)
-);
-
-let mainMesh = main.meshes.logo; */
-
 export default {
   data() {
     return {
@@ -143,17 +133,6 @@ export default {
     setTextTexture(text, duration) {
       this.main.removeAllMeshes();
 
-      /* const texture = new TextTexture({
-        fontFamily: '"Times New Roman", Times, serif',
-        fontSize: 32,
-        text
-      });
-
-      const widthProportion = texture.image.width / texture.image.height;
-      const originalProportion = 218.64 / texture.image.height;
-
-      console.log(texture.image.width, texture.image.height); */
-
       this.mainMesh = this.main.addAnimationMesh(
         "current",
         new THREE.TextGeometry(text, {
@@ -166,12 +145,7 @@ export default {
           bevelEnabled: false,
           anchor: { x: 0.5, y: 0.0, z: 0.5 }
         }),
-        /* new THREE.PlaneGeometry(
-          cSize * originalProportion * widthProportion,
-          cSize * originalProportion,
-          300,
-          300
-        ) */ duration
+        duration
       );
 
       const camera = this.main.root.camera;
@@ -223,10 +197,6 @@ export default {
     loader.load("fonts/helvetiker_regular.typeface.json", font => {
       this.loadedFont = font;
       this.startPlay();
-      /*  this.setTextTexture(
-          "Very test text",
-          5
-        ); */
     });
 
     this.onTrackPlaying();
